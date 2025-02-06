@@ -1,10 +1,24 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import { Rating } from '@mui/material';
 import { BsFillMicFill } from "react-icons/bs";
 import "./pdt.css";
 
 const Product = ({ product }) => {
+    const [voices, setVoices] = useState([]);
+
+    useEffect(() => {
+        const loadVoices = () => {
+            const availableVoices = window.speechSynthesis.getVoices();
+            setVoices(availableVoices);
+        };
+
+        loadVoices();
+        if (window.speechSynthesis.onvoiceschanged !== undefined) {
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+        }
+    }, []);
+
     const options = {
         precision: 0.5,
         readOnly: true,
@@ -16,6 +30,13 @@ const Product = ({ product }) => {
         speech.text = `Product Name: ${product.name}. Price: ₹${product.price}. Rating: ${product.ratings} stars.`;
         speech.rate = 1;
         speech.pitch = 1;
+
+        // Select a specific voice
+        const selectedVoice = voices.find(voice => voice.name.includes("Female")) || voices[0];
+        if (selectedVoice) {
+            speech.voice = selectedVoice;
+        }
+
         window.speechSynthesis.speak(speech);
     };
 
