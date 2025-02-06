@@ -11,6 +11,7 @@ import SpellcheckIcon from '@mui/icons-material/Spellcheck';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { NEW_PRODUCT_RESET } from '../../constants/productConstant';
 import { useNavigate } from 'react-router-dom';
+import "./BulkSell.css"
 
 const BulkSell = () => {
     const navigate = useNavigate();
@@ -21,7 +22,7 @@ const BulkSell = () => {
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
     const [category, setCategory] = useState('');
-    const [Stock, setStock] = useState('50'); // Default to 50
+    const [Stock, setStock] = useState('50'); 
     const [images, setImages] = useState([]);
     const [imagesPreview, setImagesPreview] = useState([]);
 
@@ -52,7 +53,7 @@ const BulkSell = () => {
         myForm.set("description", description);
         myForm.set("category", category);
         myForm.set("Stock", Stock);
-        myForm.set("isBulk", true); // Explicitly setting isBulk to true (as string)
+        myForm.set("isBulk", true);
 
         images.forEach((image) => {
             myForm.append("images", image);
@@ -83,12 +84,12 @@ const BulkSell = () => {
     return (
         <>
             <MetaData title='Create Product -- DeadStock' />
-            <div className="dashboard">
-                <div className="newProductContainer">
-                    <form className='createProductForm' onSubmit={createProductSubmitHandler} encType='multipart/form-data'>
-                        <h1>Create Product</h1>
+            <div className="centeredContainer">
+                <div className="productFormContainer">
+                    <form className='productForm' onSubmit={createProductSubmitHandler} encType='multipart/form-data'>
+                        <h1>Bulk Sell</h1>
 
-                        <div>
+                        <div className="inputField">
                             <SpellcheckIcon />
                             <input 
                                 type="text"
@@ -99,7 +100,7 @@ const BulkSell = () => {
                             />
                         </div>
 
-                        <div>
+                        <div className="inputField">
                             <AttachMoneyIcon />
                             <input 
                                 type="number"
@@ -110,7 +111,7 @@ const BulkSell = () => {
                             />
                         </div>
 
-                        <div>
+                        <div className="inputField">
                             <DescriptionIcon />
                             <textarea
                                 placeholder='Product Description'
@@ -121,7 +122,7 @@ const BulkSell = () => {
                             ></textarea>
                         </div>
 
-                        <div>
+                        <div className="inputField">
                             <AccountTreeIcon />
                             <select onChange={(e) => setCategory(e.target.value)}>
                                 <option value="">Choose Category</option>
@@ -133,34 +134,34 @@ const BulkSell = () => {
                             </select>
                         </div>
 
-                        <div>
+                        <div className="inputField">
                             <StorageIcon />
                             <input 
                                 type="number"
                                 placeholder='Stock'
                                 required
                                 value={Stock}
-                                min="50"  // Minimum stock is 50
+                                min="50" 
                                 onChange={(e) => setStock(e.target.value)}
                             />
                         </div>
 
-                        <div id='createProductFormFile'>
+                        <div id='fileInput'>
                             <input type="file" name="avatar" accept='image/*' multiple onChange={createProductImageChange} />
                         </div>
 
-                        <div id='createProductFormImage'>
+                        <div id='imagePreview'>
                             {imagesPreview.map((image, index) => (
                                 <img src={image} alt="Product Preview" key={index} />
                             ))}
                         </div>
 
                         <Button
-                            id='createProductBtn'
+                            id='submitProductBtn'
                             type='submit'
                             disabled={loading ? true : false}
                         >
-                            Create
+                            List Product
                         </Button>
                     </form>
                 </div>

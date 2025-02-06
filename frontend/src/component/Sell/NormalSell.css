@@ -1,62 +1,75 @@
-.normalSellPageContainer {
-    width: 80%;
-    margin: 0 auto;
-    padding: 2rem;
-    background-color: #f4f4f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.bulkSellDashboard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f6f9;
 }
 
-.pageTitle {
-    text-align: center;
-    font-size: 2.5rem;
-    color: #735DA5;
-}
-
-.pageDescription {
-    text-align: center;
-    font-size: 1.1rem;
-    margin-bottom: 2rem;
-    color: #333;
-}
-
-.productForm {
+.bulkSellContainer {
+    width: 100%;
+    max-width: 600px;
     background-color: white;
-    padding: 1.5rem;
+    padding: 2rem;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.productForm label {
-    font-size: 1.1rem;
+.bulkSellForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.bulkSellForm h1 {
+    text-align: center;
+    font-size: 2rem;
     color: #333;
 }
 
-.productForm input,
-.productForm textarea {
+.bulkSellForm div {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.bulkSellForm input,
+.bulkSellForm textarea,
+.bulkSellForm select {
     width: 100%;
     padding: 0.8rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 6px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
-.productForm textarea {
-    resize: vertical;
+.bulkSellForm input[type="file"] {
+    border: none;
+    padding: 0;
 }
 
-.submitButton {
-    width: 100%;
-    padding: 1rem;
+.bulkSellForm img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-top: 0.5rem;
+}
+
+#bulkSellBtn {
     background-color: #735DA5;
     color: white;
+    font-size: 1rem;
+    padding: 0.8rem;
     border: none;
-    border-radius: 6px;
-    font-size: 1.2rem;
-    margin-top: 2rem;
+    border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-.submitButton:hover {
-    background-color: #5a4891;
+#bulkSellBtn:disabled {
+    background-color: #cccccc;
+}
+
+#bulkSellBtn:hover:not(:disabled) {
+    background-color: #6043a4;
 }

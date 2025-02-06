@@ -11,7 +11,6 @@ const Product = ({ product }) => {
         value: product.ratings,
     };
 
-    // Function to speak product details when mic button is clicked
     const speakProductDetails = () => {
         const speech = new SpeechSynthesisUtterance();
         speech.text = `Product Name: ${product.name}. Price: ₹${product.price}. Rating: ${product.ratings} stars.`;
