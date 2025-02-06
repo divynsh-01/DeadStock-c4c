@@ -8,7 +8,7 @@ import MetaData from '../layout/MetaData';
 import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 import "./Products.css";
-import logoHead from "../../images/logoHead.png"
+import logoHead from "../../images/logoHead2.png"
 
 const categories = [
     "Laptop", "Footwear", "Bottom", "Attire", "Smartphones",
@@ -78,7 +78,7 @@ const Products = () => {
                     <MetaData title="Products -- DeadStock" />
                     <section id="logoHead">
                         <div className="headlogo">
-                            <img src={logoHead} style={{ width: "20%", height: "auto" }} alt="" />
+                            <img src={logoHead} style={{ width: "90%", height: "auto" }} alt="" />
                         </div>
                     </section>
                     <h2 className="ProductsHeading">Products</h2>
