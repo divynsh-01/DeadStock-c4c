@@ -1,0 +1,62 @@
+.normalSellPageContainer {
+    width: 80%;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #f4f4f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.pageTitle {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #735DA5;
+}
+
+.pageDescription {
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    color: #333;
+}
+
+.productForm {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.productForm label {
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.productForm input,
+.productForm textarea {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.productForm textarea {
+    resize: vertical;
+}
+
+.submitButton {
+    width: 100%;
+    padding: 1rem;
+    background-color: #735DA5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.2rem;
+    margin-top: 2rem;
+    cursor: pointer;
+}
+
+.submitButton:hover {
+    background-color: #5a4891;
+}
