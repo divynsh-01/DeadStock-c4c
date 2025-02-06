@@ -12,17 +12,20 @@ export const trackProductClick = (productId, userId) => async (dispatch) => {
 
         const config = { headers: { "Content-Type": "application/json" } };
 
+        // Send POST request to backend
         const { data } = await axios.post(
-            `/api/v1/product/click`, 
-            { productId, userId },
+            `http://localhost:8080/product/${productId}`,  // Ensure correct URL structure
+            { userId },  // Send userId in the request body
             config
         );
 
+        // Dispatch success action with received data
         dispatch({
             type: TRACK_PRODUCT_CLICK_SUCCESS,
             payload: data,
         });
     } catch (error) {
+        // Dispatch failure action if error occurs
         dispatch({
             type: TRACK_PRODUCT_CLICK_FAIL,
             payload: error.response?.data.message || "Something went wrong",

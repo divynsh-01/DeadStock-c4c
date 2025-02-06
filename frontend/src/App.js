@@ -2,7 +2,7 @@ import './App.css';
 import Header from "./component/layout/Header/Header.js";
 import Footer from "./component/layout/Footer/Footer.js";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import Home from './component/Home/Home.js';
 import ProductDetails from './component/Product/ProductDetails.js';
 import Products from './component/Product/Products.js';
@@ -49,23 +49,34 @@ function App() {
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const [stripeApiKey, setStripeApiKey] = useState("");
 
-  // Memoize the function to avoid unnecessary re-creations
-  const getStripeApiKey = useCallback(async () => {
-    const { data } = await axios.get("/api/v1/stripeapikey");
-    setStripeApiKey(data.stripeApiKey);
-  }, []); // Empty array means the function is memoized only once
+  // Function to get Stripe API key
+  const getStripeApiKey = async () => {
+    try {
+      const { data } = await axios.get("/api/v1/stripeapikey");
+      setStripeApiKey(data.stripeApiKey);
+    } catch (error) {
+      console.error("Failed to load Stripe API key", error);
+    }
+  };
 
-  React.useEffect(() => {
-    store.dispatch(loadUser());
-    getStripeApiKey();
-  }, [getStripeApiKey]); // Safe to use getStripeApiKey as a dependency
+  // Only fetch user data and Stripe API key if the user is not authenticated
+  useEffect(() => {
+    if (!isAuthenticated) {
+      store.dispatch(loadUser()); // Load user data only if not authenticated
+    }
+
+    // Load Stripe API key only after the user is authenticated
+    if (isAuthenticated) {
+      getStripeApiKey();
+    }
+  }, [isAuthenticated]); // Dependencies to re-trigger on authentication state changes
 
   return (
     <Router>
       <Header />
-
+      
       {isAuthenticated && <UserOptions user={user} />}
-
+      
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/product/:id" element={<ProductDetails />} />
@@ -81,19 +92,10 @@ function App() {
         <Route path="/normalsell" element={<NormalSell />} />
         <Route path="/password/forgot" element={<ForgotPassword />} />
         <Route path="/password/reset/:token" element={<ResetPassword />} />
-
-        <Route
-          path="/accounts"
-          element={<ProtectedRoute component={Profile} />}
-        />
-        <Route
-          path="/me/update"
-          element={<ProtectedRoute component={UpdateProfile} />}
-        />
-        <Route
-          path="/password/update"
-          element={<ProtectedRoute component={UpdatePassword} />}
-        />
+          
+        <Route path="/accounts" element={<ProtectedRoute component={Profile} />} />
+        <Route path="/me/update" element={<ProtectedRoute component={UpdateProfile} />} />
+        <Route path="/password/update" element={<ProtectedRoute component={UpdatePassword} />} />
         <Route path="/cart" element={<ProtectedRoute component={Cart} />} />
         <Route path="/shipping" element={<ProtectedRoute component={Shipping} />} />
         <Route path="/order/confirm" element={<ProtectedRoute component={ConfirmOrder} />} />
@@ -109,7 +111,7 @@ function App() {
         <Route path="/admin/users" element={<ProtectedRoute isAdmin={true} component={UsersList} />} />
         <Route path="/admin/user/:id" element={<ProtectedRoute isAdmin={true} component={UpdateUser} />} />
         <Route path="/admin/reviews" element={<ProtectedRoute isAdmin={true} component={ProductReviews} />} />
-
+        
         {isAuthenticated && stripeApiKey && (
           <Route
             path="/process/payment"
@@ -123,7 +125,7 @@ function App() {
 
         <Route path="*" element={<NotFound />} />
       </Routes>
-
+      
       <Footer />
     </Router>
   );
