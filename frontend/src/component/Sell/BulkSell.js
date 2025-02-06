@@ -1,100 +1,84 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { createSellProduct, clearErrors } from '../../actions/sellAction'
-import { toast } from 'react-toastify'
-import { Button } from '@mui/material'
-import MetaData from '../layout/MetaData'
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { createProduct, clearErrors } from '../../actions/productAction';
+import { toast } from 'react-toastify';
+import { Button } from '@mui/material';
+import MetaData from '../layout/MetaData';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import DescriptionIcon from '@mui/icons-material/Description';
 import StorageIcon from '@mui/icons-material/Storage';
 import SpellcheckIcon from '@mui/icons-material/Spellcheck';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import { NEW_SELL_PRODUCT_RESET } from '../../constants/sellConstant'
-import { useNavigate } from 'react-router-dom'
+import { NEW_PRODUCT_RESET } from '../../constants/productConstant';
+import { useNavigate } from 'react-router-dom';
 
+const BulkSell = () => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { loading, error, success } = useSelector((state) => state.newProduct);
 
-
-const NewProduct = () => {
-
-    const navigate = useNavigate()
-
-    const dispatch = useDispatch()
-    const { loading, error, success } = useSelector((state) => state.sellProducts)
-
-    const [name, setName] = useState("")
-    const [price, setPrice] = useState("")
-    const [description, setDescription] = useState("")
-    const [category, setCategory] = useState("")
-    const [Stock, setStock] = useState("")
-    const [images, setImages] = useState([])
-    const [imagesPreview, setImagesPreview] = useState([])
+    const [name, setName] = useState('');
+    const [price, setPrice] = useState('');
+    const [description, setDescription] = useState('');
+    const [category, setCategory] = useState('');
+    const [Stock, setStock] = useState('50'); // Default to 50
+    const [images, setImages] = useState([]);
+    const [imagesPreview, setImagesPreview] = useState([]);
 
     const categories = [
-        "Laptop",
-        "Footwear",
-        "Bottom",
-        "Attire",
-        "Smartphones",
-        "Assessories",
-        "Technology",
-        "Sports",
-        "Electronics",
-        "Decor",
-        "Art"
+        "Laptop", "Footwear", "Bottom", "Attire", "Smartphones",
+        "Accessories", "Technology", "Sports", "Electronics", "Decor", "Art","Toys"
     ];
 
     useEffect(() => {
         if (error) {
-            toast.error(error)
-            dispatch(clearErrors())
+            toast.error(error);
+            dispatch(clearErrors());
         }
 
         if (success) {
-            toast.success("Product Created Successfully")
-            navigate("/")
-            dispatch({ type: NEW_SELL_PRODUCT_RESET })
+            toast.success("Product Created Successfully");
+            navigate("/");
+            dispatch({ type: NEW_PRODUCT_RESET });
         }
-
-    }, [dispatch, error, navigate, success])
+    }, [dispatch, error, navigate, success]);
 
     const createProductSubmitHandler = (e) => {
-        e.preventDefault()
+        e.preventDefault();
 
-        const myForm = new FormData()
-
-        myForm.set("name", name)
-        myForm.set("price", price)
-        myForm.set("description", description)
-        myForm.set("category", category)
-        myForm.set("Stock", Stock)
+        const myForm = new FormData();
+        myForm.set("name", name);
+        myForm.set("price", price);
+        myForm.set("description", description);
+        myForm.set("category", category);
+        myForm.set("Stock", Stock);
+        myForm.set("isBulk", true); // Explicitly setting isBulk to true (as string)
 
         images.forEach((image) => {
-            myForm.append("images", image)
-        })
+            myForm.append("images", image);
+        });
 
-        dispatch(createSellProduct(myForm))
-
-    }
+        dispatch(createProduct(myForm));
+    };
 
     const createProductImageChange = (e) => {
-        const files = Array.from(e.target.files)
-        setImages([])
-        setImagesPreview([])
+        const files = Array.from(e.target.files);
+        setImages([]);
+        setImagesPreview([]);
 
         files.forEach((file) => {
-            const reader = new FileReader()
+            const reader = new FileReader();
 
             reader.onload = () => {
                 if (reader.readyState === 2) {
-                    setImagesPreview((old) => [...old, reader.result])
-                    setImages((old) => [...old, reader.result])
+                    setImagesPreview((old) => [...old, reader.result]);
+                    setImages((old) => [...old, reader.result]);
                 }
-            }
+            };
 
-            reader.readAsDataURL(file)
-        })
-    }
-
+            reader.readAsDataURL(file);
+        });
+    };
 
     return (
         <>
@@ -103,9 +87,11 @@ const NewProduct = () => {
                 <div className="newProductContainer">
                     <form className='createProductForm' onSubmit={createProductSubmitHandler} encType='multipart/form-data'>
                         <h1>Create Product</h1>
+
                         <div>
                             <SpellcheckIcon />
-                            <input type="text"
+                            <input 
+                                type="text"
                                 placeholder='Product Name'
                                 required
                                 value={name}
@@ -115,9 +101,11 @@ const NewProduct = () => {
 
                         <div>
                             <AttachMoneyIcon />
-                            <input type="number"
+                            <input 
+                                type="number"
                                 placeholder='Price'
                                 required
+                                value={price}
                                 onChange={(e) => setPrice(e.target.value)}
                             />
                         </div>
@@ -143,14 +131,16 @@ const NewProduct = () => {
                                     </option>
                                 ))}
                             </select>
-
                         </div>
 
                         <div>
                             <StorageIcon />
-                            <input type="number"
+                            <input 
+                                type="number"
                                 placeholder='Stock'
                                 required
+                                value={Stock}
+                                min="50"  // Minimum stock is 50
                                 onChange={(e) => setStock(e.target.value)}
                             />
                         </div>
@@ -168,15 +158,15 @@ const NewProduct = () => {
                         <Button
                             id='createProductBtn'
                             type='submit'
-                            disabled={loading ? true : false}>
+                            disabled={loading ? true : false}
+                        >
                             Create
                         </Button>
-
                     </form>
                 </div>
             </div>
         </>
-    )
-}
+    );
+};
 
-export default NewProduct
+export default BulkSell;

@@ -1,0 +1,25 @@
+.productCard {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
+
+.productCard p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+
+.micButton{
+    width: 50%;
+    margin-left: 100px;
+    zoom: 0.9;
+}

@@ -67,26 +67,21 @@
   }
   
   
-
   .product-description {
     font-size: 0.9rem;
     color: #666;
     margin-bottom: 15px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2; /* Limits the content to 2 lines for WebKit-based browsers */
-    -webkit-box-orient: vertical; /* Necessary for the clamping to work */
+    display: -webkit-box; /* For WebKit-based browsers */
+    -webkit-line-clamp: 2; /* Limits the content to 2 lines */
+    -webkit-box-orient: vertical; /* Necessary for clamping to work */
     overflow: hidden; /* Hides content that overflows */
     text-overflow: ellipsis; /* Adds ellipsis when content overflows */
-    
-    display: -moz-box; /* For older Firefox versions */
-    -moz-line-clamp: 2; /* Older Firefox versions support this property */
-    -moz-box-orient: vertical; /* Required for clamping in older Firefox versions */
-    
-    display: box; /* For legacy support */
-    line-clamp: 2; /* Standard, non-prefixed version for future browsers */
-    box-orient: vertical; /* Standard box-orient */
-  }
   
+    display: flex; /* For modern browsers */
+    flex-direction: column; /* Align text vertically */
+    max-height: 2.8em; /* Adjust based on your line-height to achieve 2-line truncation */
+    overflow: hidden; /* Hides the overflow content */
+  }
   
   
   .vote-button {

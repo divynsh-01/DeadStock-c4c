@@ -1,10 +1,7 @@
-const SellProduct = require("../models/productModel");
+const SellProduct = require("../models/sellProductModel");
 const ErrorHandler = require("../utils/errorhandler");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
-const Apifeatures = require("../utils/apifeatures");
-const cloudinary = require("cloudinary")
-
-
+const cloudinary = require("cloudinary");
 
 // Create product 
 exports.createSellProduct = catchAsyncErrors(async (req, res, next) => {
@@ -21,6 +18,7 @@ exports.createSellProduct = catchAsyncErrors(async (req, res, next) => {
 
         const imagesLink = [];
 
+        // Upload images to cloudinary
         for (let i = 0; i < images.length; i++) {
             const result = await cloudinary.v2.uploader.upload(images[i], {
                 folder: "products",
@@ -32,11 +30,17 @@ exports.createSellProduct = catchAsyncErrors(async (req, res, next) => {
             });
         }
 
+        // Convert isVerified to boolean (check if it is a string and convert it)
+        req.body.isVerified = req.body.isVerified === "true";
+
         req.body.images = imagesLink;
         req.body.user = req.user.id;
+        req.body.isVerified = req.body.isVerified || false; // Default to false if not provided
 
+        // Create the product
         const product = await SellProduct.create(req.body);
 
+        // Return the created product
         res.status(201).json({
             success: true,
             product,
@@ -45,5 +49,3 @@ exports.createSellProduct = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler(error.message || "Internal Server Error", 500));
     }
 });
-
-

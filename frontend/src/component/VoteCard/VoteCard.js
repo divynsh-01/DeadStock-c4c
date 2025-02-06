@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './VoteCard.css';
 
-// VoteCard Component for displaying a list of products
 const VoteCard = ({ products, onVote }) => {
   const [votedProductIds, setVotedProductIds] = useState([]);
 
@@ -9,7 +8,7 @@ const VoteCard = ({ products, onVote }) => {
     if (votedProductIds.includes(productId)) {
       alert('You have already voted for this product!');
     } else {
-      onVote(productId); // You can pass the ID of the voted product here
+      onVote(productId); 
       setVotedProductIds([...votedProductIds, productId]);
     }
   };

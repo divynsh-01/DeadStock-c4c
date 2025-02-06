@@ -42,7 +42,8 @@ const NewProduct = () => {
         "Sports",
         "Electronics",
         "Decor",
-        "Art"
+        "Art",
+        "Toys"
     ];
 
     useEffect(() => {
@@ -69,6 +70,7 @@ const NewProduct = () => {
         myForm.set("description", description)
         myForm.set("category", category)
         myForm.set("Stock", Stock)
+        myForm.set("isVerified", true)
 
         images.forEach((image) => {
             myForm.append("images", image)

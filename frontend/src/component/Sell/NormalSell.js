@@ -1,81 +1,184 @@
-import React, { useState } from 'react';
-import './NormalSell.css';
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { createSellProduct, clearErrors } from '../../actions/sellAction'
+import { toast } from 'react-toastify'
+import { Button } from '@mui/material'
+import MetaData from '../layout/MetaData'
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import DescriptionIcon from '@mui/icons-material/Description';
+import StorageIcon from '@mui/icons-material/Storage';
+import SpellcheckIcon from '@mui/icons-material/Spellcheck';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import { NEW_SELL_PRODUCT_RESET } from '../../constants/sellConstant'
+import { useNavigate } from 'react-router-dom'
 
-const NormalSell = () => {
-    const [product, setProduct] = useState({
-        name: '',
-        description: '',
-        price: '',
-        category: '',
-        Stock: '',
-        image: ''
-    });
 
-    // Handle input changes
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setProduct({ ...product, [name]: value });
+
+const BulkSell = () => {
+
+    const navigate = useNavigate()
+
+    const dispatch = useDispatch()
+    const { loading, error, success } = useSelector((state) => state.sellProducts)
+
+    const [name, setName] = useState("")
+    const [price, setPrice] = useState("")
+    const [description, setDescription] = useState("")
+    const [category, setCategory] = useState("")
+    const [Stock, setStock] = useState("")
+    const [images, setImages] = useState([])
+    const [imagesPreview, setImagesPreview] = useState([])
+
+    const categories = [
+        "Laptop",
+        "Footwear",
+        "Bottom",
+        "Attire",
+        "Smartphones",
+        "Assessories",
+        "Technology",
+        "Sports",
+        "Electronics",
+        "Decor",
+        "Art",
+        "Toys"
+    ];
+
+    useEffect(() => {
+        if (error) {
+            toast.error(error)
+            dispatch(clearErrors())
+        }
+
+        if (success) {
+            toast.success("Product Created Successfully")
+            navigate("/")
+            dispatch({ type: NEW_SELL_PRODUCT_RESET })
+        }
+
+    }, [dispatch, error, navigate, success])
+
+    const createProductSubmitHandler = (e) => {
+        e.preventDefault();
+    
+        const myForm = new FormData();
+    
+        myForm.set("name", name);
+        myForm.set("price", price);
+        myForm.set("description", description);
+        myForm.set("category", category);
+        myForm.set("Stock", Stock);
+        myForm.set("isVerified", false); 
+    
+        images.forEach((image) => {
+            myForm.append("images", image);
+        });
+    
+        dispatch(createSellProduct(myForm));
     };
+    
+
+    const createProductImageChange = (e) => {
+        const files = Array.from(e.target.files)
+        setImages([])
+        setImagesPreview([])
+
+        files.forEach((file) => {
+            const reader = new FileReader()
+
+            reader.onload = () => {
+                if (reader.readyState === 2) {
+                    setImagesPreview((old) => [...old, reader.result])
+                    setImages((old) => [...old, reader.result])
+                }
+            }
+
+            reader.readAsDataURL(file)
+        })
+    }
+
 
     return (
-        <div className="normalSellPageContainer">
-            <h1 className="pageTitle">Normal Sell Your Product</h1>
-            <p className="pageDescription">
-                Enter the details of the product you want to sell individually.
-            </p>
+        <>
+            <MetaData title='Create Product -- DeadStock' />
+            <div className="dashboard">
+                <div className="newProductContainer">
+                    <form className='createProductForm' onSubmit={createProductSubmitHandler} encType='multipart/form-data'>
+                        <h1>Create Product</h1>
+                        <div>
+                            <SpellcheckIcon />
+                            <input type="text"
+                                placeholder='Product Name'
+                                required
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                            />
+                        </div>
 
-            <div className="productForm">
-                <label>Product Name:</label>
-                <input
-                    type="text"
-                    name="name"
-                    value={product.name}
-                    onChange={handleInputChange}
-                    required
-                />
-                <label>Product Description:</label>
-                <textarea
-                    name="description"
-                    value={product.description}
-                    onChange={handleInputChange}
-                    required
-                />
-                <label>Price:</label>
-                <input
-                    type="number"
-                    name="price"
-                    value={product.price}
-                    onChange={handleInputChange}
-                    required
-                />
-                <label>Category:</label>
-                <input
-                    type="text"
-                    name="category"
-                    value={product.category}
-                    onChange={handleInputChange}
-                    required
-                />
-                <label>Stock:</label>
-                <input
-                    type="number"
-                    name="Stock"
-                    value={product.Stock}
-                    onChange={handleInputChange}
-                    required
-                />
-                <label>Product Image URL:</label>
-                <input
-                    type="text"
-                    name="image"
-                    value={product.image}
-                    onChange={handleInputChange}
-                />
+                        <div>
+                            <AttachMoneyIcon />
+                            <input type="number"
+                                placeholder='Price'
+                                required
+                                onChange={(e) => setPrice(e.target.value)}
+                            />
+                        </div>
+
+                        <div>
+                            <DescriptionIcon />
+                            <textarea
+                                placeholder='Product Description'
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                cols="30"
+                                rows='1'
+                            ></textarea>
+                        </div>
+
+                        <div>
+                            <AccountTreeIcon />
+                            <select onChange={(e) => setCategory(e.target.value)}>
+                                <option value="">Choose Category</option>
+                                {categories.map((cate) => (
+                                    <option value={cate} key={cate}>
+                                        {cate}
+                                    </option>
+                                ))}
+                            </select>
+
+                        </div>
+
+                        <div>
+                            <StorageIcon />
+                            <input type="number"
+                                placeholder='Stock'
+                                required
+                                onChange={(e) => setStock(e.target.value)}
+                            />
+                        </div>
+
+                        <div id='createProductFormFile'>
+                            <input type="file" name="avatar" accept='image/*' multiple onChange={createProductImageChange} />
+                        </div>
+
+                        <div id='createProductFormImage'>
+                            {imagesPreview.map((image, index) => (
+                                <img src={image} alt="Product Preview" key={index} />
+                            ))}
+                        </div>
+
+                        <Button
+                            id='createProductBtn'
+                            type='submit'
+                            disabled={loading ? true : false}>
+                            Create
+                        </Button>
+
+                    </form>
+                </div>
             </div>
+        </>
+    )
+}
 
-            <button className="submitButton">Submit Product for Normal Sell</button>
-        </div>
-    );
-};
-
-export default NormalSell;
+export default BulkSell
